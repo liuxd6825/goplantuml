@@ -1,0 +1,6 @@
+
+@startuml
+' @aggregate{}  @data{title:"人员"}}
+class Person {
+}
+@enduml

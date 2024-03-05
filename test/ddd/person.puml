@@ -1,0 +1,112 @@
+@startuml
+
+' 模型分析
+namespace persons{
+    namespace model {
+
+        '人员
+        ' @aggerage
+        class Person  {
+            '@data{size:100,tiltes:{cn:"姓名"}} @grid{width:200} @form{}
+            Name string
+            '出生日期
+            Birthday dateTime
+            '分析状态
+            Analyse string
+            '备注
+            Notes string
+            License *License
+            PeopleType
+            '保存 @command
+            Save(cmd SaveCommand) error
+            '按Id查询 @query
+            FindById(ctx context.Context, id string) (Person, error)
+            '按Id查询 @query
+            FindPaging(ctx context.Context, filter string) ([]*Person, error)
+            '按Id查询 @query
+            FindList(ctx context.Context, filter string) (persons []*Person, isFound bool, err error)
+        }
+
+        class Basic {
+            '分析状态
+            Title string
+            Name string
+            Value string
+            DataType string
+        }
+
+        '证件
+        class License {
+            '截止日期
+            LicenseType LicenseType
+            '卡号
+            Code string
+            '截止日期
+            ExpirationDate dateTime
+            '备注
+            Notes string
+        }
+
+        '证件类型
+        class LicenseType {
+            '身份证
+            IdCard
+            '驾驶证
+            Drive
+            '医保
+            Health
+            '社会卡
+            SocialSecurity
+        }
+
+
+        '性别
+        enum Gender {
+            '男
+            Man
+            '女
+            Woman
+            '@
+            M
+        }
+
+        '人员类型
+        enum  PeopleType {
+            '报案人
+            Informant
+            '嫌疑人
+            Suspect
+            '受害人
+            Victim
+            '第三人
+            Third
+        }
+
+        '报案人金额
+        class InformantMoney  {
+        }
+
+        '嫌疑人金额
+        class SuspectMoney {
+        }
+
+        class AnalyseStatus {
+            待分析
+            分析中
+            排除
+            完成
+        }
+
+        Person ”1“->"*" 银行账户 :> 拥有
+        Person ”1“->"*" License :> 拥有
+        Person -> InformantMoney :> 拥有
+        Person -> SuspectMoney :> 拥有
+        Person ”1“->"*" Basic :> 拥有
+
+    }
+
+}
+
+
+@enduml
+
