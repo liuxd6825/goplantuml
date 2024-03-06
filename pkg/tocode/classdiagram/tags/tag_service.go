@@ -17,7 +17,7 @@ func NewTagService(text string) (*TagService, error) {
 	return tagData, nil
 }
 
-func ParseService(text string) (tag Tag, ok bool, err error) {
+func ParseTagService(text string) (tag Tag, ok bool, err error) {
 	dataText, dataHas := GetTagText(text, TagTypeService)
 	if dataHas {
 		tag, err = NewTagService(dataText)

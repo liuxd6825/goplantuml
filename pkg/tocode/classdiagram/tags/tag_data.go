@@ -6,15 +6,15 @@ import (
 
 type TagData struct {
 	BaseTag
-	Size   int    `json:"size"`
-	Title  string `json:"title"`
-	Titles Titles `json:"titles"`
+	Size   int    `json:"size,omitempty"`
+	Title  string `json:"title,omitempty"`
+	Titles Titles `json:"titles,omitempty"`
 }
 
 type Titles struct {
-	CN string `json:"cn"`
-	EN string `json:"en"`
-	DE string `json:"de"`
+	CN string `json:"cn,omitempty"`
+	EN string `json:"en,omitempty"`
+	DE string `json:"de,omitempty"`
 }
 
 func NewTagData(text string) (*TagData, error) {

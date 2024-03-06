@@ -18,6 +18,12 @@ const (
 	TagTypeGrid       TagType = "@grid"
 	TagTypeRepository TagType = "@repository"
 	TagTypeService    TagType = "@service"
+	TagTypeEntity     TagType = "@entity"
+	TagTypeEvent      TagType = "@event"
+	TagTypeApi        TagType = "@api"
+	TagTypeView       TagType = "@view"
+	TagTypeQuery      TagType = "@query"
+	TagTypeCmd        TagType = "@cmd"
 )
 
 func (t *BaseTag) GetTagType() TagType {

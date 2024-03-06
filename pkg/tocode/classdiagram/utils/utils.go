@@ -259,3 +259,10 @@ func TagUnmarshal(str string, data any) (err error) {
 	}
 	return err
 }
+
+var r = regexp.MustCompile("@(.*?){(.*?)}$")
+
+func RemoveTags(str string) string {
+	text := r.ReplaceAllString(str, "")
+	return strings.Trim(text, "")
+}

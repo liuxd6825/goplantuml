@@ -6,7 +6,7 @@ import (
 
 func TestParseTags(t *testing.T) {
 	str := "姓名 @data{size:100} @grid{width:200} @form{}"
-	tags, err := ParseTags(str)
+	tags, _, err := ParseTags(str)
 	if err != nil {
 		t.Error(err)
 	}

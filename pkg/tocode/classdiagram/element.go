@@ -37,9 +37,9 @@ func (n *BaseElement) InitBase(line string, typeName string, namespaceName strin
 	n.Package = list[len(list)-1]
 	n.Line = line
 	n.TypeName = typeName
-	n.Notes = notes
 	n.NamespaceName = namespaceName
 	n.Tags, err = tags.ParseNotes(notesToStrList(notes))
+	n.Notes = getNotes(notes)
 	return
 }
 
@@ -155,4 +155,16 @@ func notesToStrList(notes []*Note) []string {
 		list = append(list, note.Text)
 	}
 	return list
+}
+
+func getNotes(nodes []*Note) []*Note {
+	var newNotes []*Note
+	for _, note := range nodes {
+		str := utils.RemoveTags(note.Text)
+		if str != "" {
+			note.Text = str
+			newNotes = append(newNotes, note)
+		}
+	}
+	return newNotes
 }
