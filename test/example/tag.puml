@@ -1,15 +1,9 @@
 
 @startuml
 '人员信息
-'@aggregate()
-'@data(title:"人员")
-'@enum(person:"人员",company:"公司",account:"账号")
+'@data()
 class Person {
     人员()
 }
 
-'@event()
-'@entity()
-class Account {
-}
 @enduml

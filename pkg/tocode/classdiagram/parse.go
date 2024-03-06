@@ -25,7 +25,7 @@ func (p *parseReader) Scan() bool {
 func (p *parseReader) ReadLine() string {
 	txt := strings.Trim(p.scanner.Text(), " ")
 	if utils.IsHtml(txt) {
-		txt, _ = utils.HtmlToText(txt)
+		txt, _ = utils.GetHtmlText(txt)
 	}
 	return utils.StringClear(txt, "\n", "\r")
 }

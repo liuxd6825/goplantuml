@@ -14,7 +14,7 @@ type Namespace struct {
 	Parent      *Namespace            `json:"-"`
 }
 
-func NewNamespace(line string, parent *Namespace, notes []*Note) *Namespace {
+func NewNamespace(line string, parent *Namespace, notes []*Comment) *Namespace {
 	ns := &Namespace{
 		Nodes:       make(map[string]Element),
 		Connections: make([]*Connection, 0),
@@ -31,14 +31,14 @@ func NewNamespace(line string, parent *Namespace, notes []*Note) *Namespace {
 	return ns
 }
 
-func (n *Namespace) Parse(ctx context.Context, reader ParseReader) (resNotes []*Note, err error) {
-	notes := make([]*Note, 0)
+func (n *Namespace) Parse(ctx context.Context, reader ParseReader) (resNotes []*Comment, err error) {
+	notes := make([]*Comment, 0)
 	for reader.Scan() {
 		line := reader.ReadLine()
 		if line == "}" {
 			return
 		} else if strings.Contains(line, "'") {
-			note := NewNote(ctx, line)
+			note := NewComment(ctx, line)
 			notes = append(notes, note)
 			continue
 		} else if line == "" {
@@ -53,7 +53,7 @@ func (n *Namespace) Parse(ctx context.Context, reader ParseReader) (resNotes []*
 	return
 }
 
-func (n *Namespace) ParseLine(ctx context.Context, line string, notes []*Note, reader ParseReader) (resNotes []*Note, err error) {
+func (n *Namespace) ParseLine(ctx context.Context, line string, notes []*Comment, reader ParseReader) (resNotes []*Comment, err error) {
 	resNotes = nil
 	if line == "}" || line == "" {
 		return notes, nil

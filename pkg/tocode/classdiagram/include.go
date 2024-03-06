@@ -7,7 +7,7 @@ type Include struct {
 	FileName string `json:"fileName"`
 }
 
-func NewInclude(line string, namespaceName string, notes []*Note) *Include {
+func NewInclude(line string, namespaceName string, notes []*Comment) *Include {
 	i := &Include{}
 	i.InitBase(line, "include", namespaceName, notes)
 	return i

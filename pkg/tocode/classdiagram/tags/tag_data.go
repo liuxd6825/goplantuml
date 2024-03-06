@@ -7,7 +7,6 @@ import (
 type TagData struct {
 	BaseTag
 	Size   int    `json:"size,omitempty"`
-	Title  string `json:"title,omitempty"`
 	Titles Titles `json:"titles,omitempty"`
 }
 
@@ -22,9 +21,6 @@ func NewTagData(text string) (*TagData, error) {
 	tagData.TagType = TagTypeData
 	if err := utils.TagUnmarshal(text, tagData); err != nil {
 		return nil, err
-	}
-	if tagData.Title != "" && tagData.Titles.CN == "" {
-		tagData.Titles.CN = tagData.Title
 	}
 	return tagData, nil
 }

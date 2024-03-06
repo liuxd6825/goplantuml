@@ -74,7 +74,7 @@ func main() {
 		noteList = append(noteList, legend)
 	}
 	if *notes != "" {
-		noteList = append(noteList, "", "<b><u>Notes</u></b>")
+		noteList = append(noteList, "", "<b><u>Comments</u></b>")
 	}
 	split := strings.Split(*notes, ",")
 	for _, note := range split {

@@ -60,10 +60,10 @@ const (
 	DirectionArrowRight DirectionArrow = "right"
 )
 
-func NewConnection(ctx context.Context, line string, namespace string, notes []*Note) *Connection {
+func NewConnection(ctx context.Context, line string, namespace string, notes []*Comment) *Connection {
 	conn := &Connection{}
 	conn.init(line, namespace)
-	conn.Notes = notes
+	conn.Comments = notes
 	return conn
 }
 

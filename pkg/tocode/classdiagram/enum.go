@@ -11,7 +11,7 @@ type Enum struct {
 	Members []*EnumValue `json:"members,omitempty"`
 }
 
-func NewEnum(ctx context.Context, line string, namespace string, notes []*Note) *Enum {
+func NewEnum(ctx context.Context, line string, namespace string, notes []*Comment) *Enum {
 	enum := &Enum{
 		Members: make([]*EnumValue, 0),
 	}
@@ -21,17 +21,18 @@ func NewEnum(ctx context.Context, line string, namespace string, notes []*Note) 
 	}
 	enum.InitBase(line, "enum", namespace+ns, notes)
 	enum.InitName(name, alias)
+	enum.InitDataTag(name)
 	return enum
 }
 
 func (e *Enum) Parse(ctx context.Context, reader ParseReader) error {
-	var notes []*Note
+	var notes []*Comment
 	for reader.Scan() {
 		line := reader.ReadLine()
 		if line == "}" {
 			return nil
 		} else if strings.HasPrefix(line, "'") {
-			notes = append(notes, NewNote(ctx, line))
+			notes = append(notes, NewComment(ctx, line))
 		} else {
 			e.AddEnumValue(NewEnumValue(ctx, line, e.GetNamespaceName(), notes))
 			notes = nil

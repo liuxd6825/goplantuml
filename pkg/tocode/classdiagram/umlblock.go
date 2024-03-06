@@ -43,7 +43,7 @@ func (b *UMLBlock) getNode(namespace string, nodeName string) Element {
 }
 
 func (b *UMLBlock) parse(ctx context.Context, reader ParseReader, startTag string, endTag string) (err error) {
-	notes := make([]*Note, 0)
+	notes := make([]*Comment, 0)
 	for reader.Scan() {
 		line := reader.ReadLine()
 		if strings.HasPrefix(line, startTag) {
@@ -52,7 +52,7 @@ func (b *UMLBlock) parse(ctx context.Context, reader ParseReader, startTag strin
 				if line == "" {
 					continue
 				} else if strings.Contains(line, "'") {
-					notes = append(notes, NewNote(ctx, line))
+					notes = append(notes, NewComment(ctx, line))
 					continue
 				} else if strings.HasPrefix(line, "}") {
 					return nil

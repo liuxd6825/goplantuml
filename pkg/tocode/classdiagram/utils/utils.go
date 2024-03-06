@@ -176,7 +176,7 @@ func StringBetweenAll(str string, startTag string, endTag string) (isHas bool, r
 	return
 }
 
-func HtmlToText(body string) (string, error) {
+func GetHtmlText(body string) (string, error) {
 	reader := strings.NewReader(body)
 	doc, err := goquery.NewDocumentFromReader(reader)
 	if err != nil {

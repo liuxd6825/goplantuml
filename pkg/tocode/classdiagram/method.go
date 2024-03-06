@@ -17,7 +17,7 @@ type Method struct {
 	IsAbstract bool              `json:"isAbstract"`
 }
 
-func NewMethod(ctx context.Context, class *Class, line string, notes []*Note) *Method {
+func NewMethod(ctx context.Context, class *Class, line string, notes []*Comment) *Method {
 	m := &Method{
 		class:  class,
 		Access: AccessPublic,

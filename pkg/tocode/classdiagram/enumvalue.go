@@ -8,7 +8,7 @@ type EnumValue struct {
 	Line string `json:"-"`
 }
 
-func NewEnumValue(ctx context.Context, line string, namespaceName string, notes []*Note) *EnumValue {
+func NewEnumValue(ctx context.Context, line string, namespaceName string, notes []*Comment) *EnumValue {
 	member := &EnumValue{
 		Name: line,
 		Line: line,

@@ -10,43 +10,76 @@ import (
 type Element interface {
 	GetLine() string
 	GetTypeName() string
-	GetNotes() []*Note
+	GetComments() []*Comment
 	GetNamespaceName() string
 	GetName() string
 	GetPackage() string
 	GetTags() []tags.Tag
+	FindTags(typeName tags.TagType) []tags.Tag
 }
 
 type BaseElement struct {
-	Line          string     `json:"-"`
-	TypeName      string     `json:"typeName,omitempty"`
-	Notes         []*Note    `json:"notes,omitempty"`
-	Tags          []tags.Tag `json:"tags,omitempty"`
-	NamespaceName string     `json:"namespaceName,omitempty"`
-	Package       string     `json:"package,omitempty"`
+	Line          string     `json:"-"`                       // 行文本
+	TypeName      string     `json:"typeName,omitempty"`      // 元素类型
+	Comments      []*Comment `json:"comments,omitempty"`      // 注释
+	Tags          []tags.Tag `json:"tags,omitempty"`          // 标签
+	NamespaceName string     `json:"namespaceName,omitempty"` // 命名空间
+	Package       string     `json:"package,omitempty"`       // 包名
 }
 
 type NameElement struct {
 	BaseElement
-	Name  string `json:"name,omitempty"`
-	Alias string `json:"alias,omitempty"`
+	Name  string `json:"name,omitempty"`  // 名称
+	Alias string `json:"alias,omitempty"` // 别名
 }
 
-func (n *BaseElement) InitBase(line string, typeName string, namespaceName string, notes []*Note) (err error) {
+func (n *BaseElement) InitBase(line string, typeName string, namespaceName string, comments []*Comment) (err error) {
 	list := strings.Split(namespaceName, ".")
 	n.Package = list[len(list)-1]
 	n.Line = line
 	n.TypeName = typeName
 	n.NamespaceName = namespaceName
-	n.Tags, err = tags.ParseNotes(notesToStrList(notes))
-	n.Notes = getNotes(notes)
+	n.Tags, err = tags.ParseNotes(commentsToStrList(comments))
+	n.Comments = initComments(comments)
 	return
 }
 
-func (n *BaseElement) FindTags(tagType string) []tags.Tag {
-	var tags []tags.Tag
+func (n *BaseElement) InitDataTag(elementName string) {
+	title := ""
+	if len(n.Comments) > 0 {
+		title = n.Comments[0].Text
+	} else {
+		title = elementName
+	}
+
+	dataTags := n.FindTags(tags.TagTypeData)
+	if len(n.Comments) == 1 {
+		for _, dataTag := range dataTags {
+			data := dataTag.(*tags.TagData)
+			if data != nil && data.Titles.CN == "" {
+				data.Titles.CN = title
+			}
+		}
+	}
+	for _, dataTag := range dataTags {
+		data := dataTag.(*tags.TagData)
+		if data != nil {
+			if data.Titles.CN == "" {
+				data.Titles.CN = title
+			}
+			if data.Titles.EN == "" {
+				data.Titles.EN = elementName
+			}
+			if data.Titles.DE == "" {
+				data.Titles.DE = elementName
+			}
+		}
+	}
+}
+
+func (n *BaseElement) FindTags(tagType tags.TagType) (tags []tags.Tag) {
 	for _, tag := range n.Tags {
-		if tagType == string(tag.GetTagType()) {
+		if tagType == tag.GetTagType() {
 			tags = append(tags, tag)
 		}
 	}
@@ -81,12 +114,12 @@ func (n *BaseElement) SetNamespaceName(val string) {
 	n.NamespaceName = val
 }
 
-func (n *BaseElement) GetNotes() []*Note {
-	return n.Notes
+func (n *BaseElement) GetComments() []*Comment {
+	return n.Comments
 }
 
-func (n *BaseElement) SetNotes(val []*Note) {
-	n.Notes = val
+func (n *BaseElement) SetComments(val []*Comment) {
+	n.Comments = val
 }
 
 func (n *BaseElement) GetTags() []tags.Tag {
@@ -98,7 +131,7 @@ func (n *BaseElement) SetTags(val []tags.Tag) {
 }
 
 func (n *BaseElement) NotesText() string {
-	return GetNotesText(n.Notes)
+	return GetNotesText(n.Comments)
 }
 
 func (n *BaseElement) Register(ctx context.Context, node Element) {
@@ -132,6 +165,8 @@ func (n *NameElement) SetAlias(val string) {
 	n.Alias = val
 }
 
+// SN
+// @Description: 蛇形名称
 func (n *NameElement) SN() string {
 	if len(n.Name) > 0 {
 		return strings.ToLower(n.Name[0:1])
@@ -144,12 +179,13 @@ func (n *NameElement) InitName(name string, alias string) {
 	n.Alias = alias
 }
 
-func (n *NameElement) Init(line string, typeName string, namespace string, notes []*Note, name string, alias string) {
+func (n *NameElement) Init(line string, typeName string, namespace string, notes []*Comment, elementName string, elementAlias string) {
 	n.BaseElement.InitBase(line, typeName, namespace, notes)
-	n.InitName(name, alias)
+	n.BaseElement.InitDataTag(elementName)
+	n.InitName(elementName, elementAlias)
 }
 
-func notesToStrList(notes []*Note) []string {
+func commentsToStrList(notes []*Comment) []string {
 	var list []string
 	for _, note := range notes {
 		list = append(list, note.Text)
@@ -157,14 +193,14 @@ func notesToStrList(notes []*Note) []string {
 	return list
 }
 
-func getNotes(nodes []*Note) []*Note {
-	var newNotes []*Note
-	for _, note := range nodes {
+func initComments(comments []*Comment) []*Comment {
+	var newComments []*Comment
+	for _, note := range comments {
 		str := utils.RemoveTags(note.Text)
 		if str != "" {
 			note.Text = str
-			newNotes = append(newNotes, note)
+			newComments = append(newComments, note)
 		}
 	}
-	return newNotes
+	return newComments
 }

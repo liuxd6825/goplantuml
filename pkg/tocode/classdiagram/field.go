@@ -14,7 +14,7 @@ type Field struct {
 	DataType string `json:"dataType"`
 }
 
-func NewField(ctx context.Context, class *Class, line string, namespace string, notes []*Note) *Field {
+func NewField(ctx context.Context, class *Class, line string, namespace string, notes []*Comment) *Field {
 	f := &Field{
 		class: class,
 	}

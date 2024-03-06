@@ -14,7 +14,7 @@ type Class struct {
 	IsInterface bool      `json:"isInterface"`
 }
 
-func NewClass(ctx context.Context, line string, namespace string, notes []*Note) *Class {
+func NewClass(ctx context.Context, line string, namespace string, notes []*Comment) *Class {
 	class := &Class{
 		Fields:  make([]*Field, 0),
 		Methods: make([]*Method, 0),
@@ -26,11 +26,12 @@ func NewClass(ctx context.Context, line string, namespace string, notes []*Note)
 	}
 	class.InitName(parseRes.Name, parseRes.Alias)
 	class.InitBase(line, "class", ns, notes)
+	class.InitDataTag(parseRes.Name)
 	class.GenericType = parseRes.GenericType
 	return class
 }
 
-func NewInterface(ctx context.Context, line string, namespace string, notes []*Note) *Class {
+func NewInterface(ctx context.Context, line string, namespace string, notes []*Comment) *Class {
 	class := &Class{
 		Fields:  make([]*Field, 0),
 		Methods: make([]*Method, 0),
@@ -60,7 +61,7 @@ func (c *Class) Parse(ctx context.Context, reader ParseReader) error {
 		{field} A field (despite parentheses)
 		{method} Some method
 	*/
-	var notes []*Note
+	var notes []*Comment
 	for reader.Scan() {
 		line := reader.ReadLine()
 		if line == "}" {
@@ -74,7 +75,7 @@ func (c *Class) Parse(ctx context.Context, reader ParseReader) error {
 		} else if strings.HasPrefix(line, "--") {
 			continue
 		} else if strings.HasPrefix(line, "'") {
-			notes = append(notes, NewNote(ctx, line))
+			notes = append(notes, NewComment(ctx, line))
 		} else if utils.StringContains(line, "(", "{method}") {
 			c.AddMethod(NewMethod(ctx, c, line, notes).Init(line))
 			notes = nil

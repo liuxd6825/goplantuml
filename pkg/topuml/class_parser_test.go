@@ -558,7 +558,7 @@ func TestRender(t *testing.T) {
 	}
 	parser.SetRenderingOptions(map[RenderingOption]interface{}{
 		RenderTitle:          "Test Title",
-		RenderNotes:          "Notes Example 1\nNotes Example 1 continues\nNotes Example 2",
+		RenderNotes:          "Comments Example 1\nComments Example 1 continues\nComments Example 2",
 		RenderPrivateMembers: true,
 	})
 
