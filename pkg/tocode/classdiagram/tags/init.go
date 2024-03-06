@@ -86,7 +86,7 @@ func ParseTags(text string) ([]Tag, bool, error) {
 }
 
 func GetTagText(text string, tagType TagType) (string, bool) {
-	isHas, res, _, _, _ := utils.StringBetween(text, string(tagType), "}")
+	isHas, res, _, _, _ := utils.StringBetween(text, string(tagType), ")")
 	if isHas {
 		return res[1:], true
 	}

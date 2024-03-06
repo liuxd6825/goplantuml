@@ -38,18 +38,3 @@ func NewTagEnum(text string) (*TagEnum, error) {
 	}
 	return tagEnum, nil
 }
-
-func ParseTagEnum(text string) (tag Tag, ok bool, err error) {
-	dataText, dataHas := GetTagText(text, TagTypeEnum)
-	if dataHas {
-		tag, err = NewTagEnum(dataText)
-	}
-	if tag != nil {
-		ok = true
-	}
-	return
-}
-
-func (t *TagEnum) GetTagType() TagType {
-	return t.TagType
-}

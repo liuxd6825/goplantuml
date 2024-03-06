@@ -9,19 +9,8 @@ type TagEntity struct {
 func NewTagEntity(text string) (*TagEntity, error) {
 	tagData := &TagEntity{}
 	tagData.TagType = TagTypeEntity
-	if err := utils.TagUnmarshal("{"+text+"}", tagData); err != nil {
+	if err := utils.TagUnmarshal(text, tagData); err != nil {
 		return nil, err
 	}
 	return tagData, nil
-}
-
-func ParseTagEntity(text string) (tag Tag, ok bool, err error) {
-	dataText, dataHas := GetTagText(text, TagTypeEntity)
-	if dataHas {
-		tag, err = NewTagEntity(dataText)
-	}
-	if tag != nil {
-		ok = true
-	}
-	return
 }

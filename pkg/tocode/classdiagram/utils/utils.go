@@ -2,6 +2,7 @@ package utils
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"log"
 	"os"
@@ -251,18 +252,26 @@ func PathExists(path string) (bool, error) {
 	return false, err
 }
 
+var tagUnmarshalRegexp = regexp.MustCompile("([a-zA-Z]\\w*)")
+
+// TagUnmarshal
+//
+//	@Description: 增加json中key的双引号
 func TagUnmarshal(str string, data any) (err error) {
-	reg := regexp.MustCompile("([a-zA-Z]\\w*)")
-	regStr := reg.ReplaceAllString(str, `"$1"`)
+	regStr := tagUnmarshalRegexp.ReplaceAllString(str, `"$1"`)
+	regStr = fmt.Sprintf("{%s}", regStr)
 	if err = json.Unmarshal([]byte(regStr), data); err != nil {
 		return err
 	}
 	return err
 }
 
-var r = regexp.MustCompile("@(.*?){(.*?)}$")
+var removeTagsRegexp = regexp.MustCompile("@(.*?)((.*?))$")
 
+// RemoveTags
+//
+//	@Description: 删除@tagName()文字
 func RemoveTags(str string) string {
-	text := r.ReplaceAllString(str, "")
+	text := removeTagsRegexp.ReplaceAllString(str, "")
 	return strings.Trim(text, "")
 }

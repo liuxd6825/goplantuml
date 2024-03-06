@@ -9,7 +9,7 @@ type TagApi struct {
 func NewTagApi(text string) (*TagApi, error) {
 	tagData := &TagApi{}
 	tagData.TagType = TagTypeApi
-	if err := utils.TagUnmarshal("{"+text+"}", tagData); err != nil {
+	if err := utils.TagUnmarshal(text, tagData); err != nil {
 		return nil, err
 	}
 	return tagData, nil
