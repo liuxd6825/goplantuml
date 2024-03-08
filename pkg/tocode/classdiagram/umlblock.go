@@ -2,6 +2,7 @@ package classdiagram
 
 import (
 	"context"
+	"github.com/jfeliu007/goplantuml/pkg/tocode/classdiagram/utils"
 	"strings"
 )
 
@@ -43,23 +44,38 @@ func (b *UMLBlock) getNode(namespace string, nodeName string) Element {
 }
 
 func (b *UMLBlock) parse(ctx context.Context, reader ParseReader, startTag string, endTag string) (err error) {
-	notes := make([]*Comment, 0)
+	comments := make([]*Comment, 0)
+	var note *Note
+	var element Element
 	for reader.Scan() {
 		line := reader.ReadLine()
 		if strings.HasPrefix(line, startTag) {
 			for reader.Scan() {
-				line := reader.ReadLine()
+				line = reader.ReadLine()
 				if line == "" {
 					continue
 				} else if strings.Contains(line, "'") {
-					notes = append(notes, NewComment(ctx, line))
+					comments = append(comments, NewComment(ctx, line))
 					continue
 				} else if strings.HasPrefix(line, "}") {
 					return nil
-				}
-				notes, err = b.Root.ParseLine(ctx, line, notes, reader)
-				if err != nil {
-					return err
+				} else if strings.HasPrefix(line, "note") {
+					comments, element, err = b.Root.ParseLine(ctx, line, comments, reader)
+					if n, ok := element.(*Note); ok {
+						note = n
+					}
+				} else if utils.StringIsEndNote(line) {
+					note = nil
+				} else {
+					var element Element
+					comments, element, err = b.Root.ParseLine(ctx, line, comments, reader)
+					if err != nil {
+						return err
+					} else if element == nil && note != nil {
+						note.AddText(line)
+					} else if element != nil {
+						note = nil
+					}
 				}
 			}
 		}

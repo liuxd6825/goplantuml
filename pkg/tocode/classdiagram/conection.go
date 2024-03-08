@@ -138,6 +138,10 @@ func (c *Connection) GetConnector() string {
 	return c.Connector
 }
 
+func (c *Connection) GetName() string {
+	return ""
+}
+
 func (c *Connection) parseConnectionType(line string) ConnectionType {
 	if strings.Contains(line, "<|-") {
 		return ConnectionGeneralization

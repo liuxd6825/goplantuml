@@ -8,17 +8,11 @@ import (
 )
 
 func TestParseFile(t *testing.T) {
-	ctx := context.Background()
-	if black, err := ParseFile(ctx, "./test/example/tag.puml"); err != nil {
-		t.Error(err)
-	} else {
-		s, err := json.Marshal(black)
-		if err != nil {
-			t.Error(err)
-			return
-		}
-		println(string(s))
-	}
+	parseFile(t, "./test/example/tag.puml")
+}
+
+func TestParseFile_Note(t *testing.T) {
+	parseFile(t, "../../../test/example/note.puml")
 }
 
 func TestMakeCode(t *testing.T) {
@@ -40,5 +34,19 @@ func TestMakeCode_MethodHtml(t *testing.T) {
 func option(opt *MackCodeOption) {
 	opt.SetFileName = func(name string) string {
 		return utils.SnakeString(name)
+	}
+}
+
+func parseFile(t *testing.T, umlFile string) {
+	ctx := context.Background()
+	if black, err := ParseFile(ctx, umlFile); err != nil {
+		t.Error(err)
+	} else {
+		s, err := json.Marshal(black)
+		if err != nil {
+			t.Error(err)
+			return
+		}
+		println(string(s))
 	}
 }

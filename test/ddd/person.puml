@@ -1,13 +1,14 @@
 @startuml
 
+title 我的一天
+
 ' 模型分析
 namespace persons{
     namespace model {
 
-        '人员
-        ' @aggerage
+        '人员 @aggerage()
         class Person  {
-            '@data{size:100,tiltes:{cn:"姓名"}} @grid{width:200} @form{}
+            '姓名 @data(size:100) @grid(width:200) @editor()
             Name string
             '出生日期
             Birthday dateTime
@@ -19,13 +20,18 @@ namespace persons{
             PeopleType
             '保存 @command
             Save(cmd SaveCommand) error
-            '按Id查询 @query
+            '按Id查询 @query()
             FindById(ctx context.Context, id string) (Person, error)
-            '按Id查询 @query
+            '按Id查询 @query()
             FindPaging(ctx context.Context, filter string) ([]*Person, error)
-            '按Id查询 @query
+            '按Id查询 @query()
             FindList(ctx context.Context, filter string) (persons []*Person, isFound bool, err error)
         }
+
+
+
+        Person .. N1
+
 
         class Basic {
             '分析状态

@@ -6,4 +6,8 @@ class Person {
     人员()
 }
 
+note left of Person
+   人员信息
+end note
+
 @enduml

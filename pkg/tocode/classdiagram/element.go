@@ -14,6 +14,9 @@ type Element interface {
 	GetNamespaceName() string
 	GetName() string
 	GetPackage() string
+}
+
+type NodeElement interface {
 	GetTags() []tags.Tag
 	FindTags(typeName tags.TagType) []tags.Tag
 }

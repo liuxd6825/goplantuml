@@ -52,7 +52,7 @@ func MakeCode(ctx context.Context, plantUmlFile string, templatePath string, sav
 
 	for _, ns := range block.Root.Namespaces {
 		var temp *template.Template
-		for _, node := range ns.Nodes {
+		for _, node := range ns.Elements {
 			temp = nil
 			switch node.GetTypeName() {
 			case "class":

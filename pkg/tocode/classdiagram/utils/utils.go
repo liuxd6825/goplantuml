@@ -122,9 +122,6 @@ func StringTrim(str string, cutsets ...string) string {
 }
 
 func StringClear(str string, dels ...string) string {
-	if len(dels) == 0 {
-		return strings.Trim(str, " ")
-	}
 	s := str
 	for _, c := range dels {
 		s = strings.ReplaceAll(s, c, "")
@@ -274,4 +271,11 @@ var removeTagsRegexp = regexp.MustCompile("@(.*?)((.*?))$")
 func RemoveTags(str string) string {
 	text := removeTagsRegexp.ReplaceAllString(str, "")
 	return strings.Trim(text, "")
+}
+
+var isEndNoteRegexp = regexp.MustCompile("end(.*?)note")
+
+func StringIsEndNote(str string) bool {
+	matched := isEndNoteRegexp.MatchString(str)
+	return matched
 }

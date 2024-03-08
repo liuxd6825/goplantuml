@@ -48,10 +48,6 @@ func NewInterface(ctx context.Context, line string, namespace string, notes []*C
 	return class
 }
 
-func (c *Class) GetTypeName() string {
-	return "class"
-}
-
 func (c *Class) Parse(ctx context.Context, reader ParseReader) error {
 
 	if !strings.HasSuffix(c.Line, "{") {

@@ -9,9 +9,15 @@ import (
 	"strings"
 )
 
+type ReadLineOption struct {
+	TrimSpace bool
+}
+
+type ReadLineOptions = func(opt *ReadLineOption)
+
 type ParseReader interface {
 	Scan() bool
-	ReadLine() string
+	ReadLine(opts ...ReadLineOptions) string
 }
 
 type parseReader struct {
@@ -22,8 +28,15 @@ func (p *parseReader) Scan() bool {
 	return p.scanner.Scan()
 }
 
-func (p *parseReader) ReadLine() string {
-	txt := strings.Trim(p.scanner.Text(), " ")
+func (p *parseReader) ReadLine(opts ...ReadLineOptions) string {
+	opt := &ReadLineOption{TrimSpace: true}
+	for _, fun := range opts {
+		fun(opt)
+	}
+	txt := p.scanner.Text()
+	if opt.TrimSpace {
+		txt = strings.Trim(txt, " ")
+	}
 	if utils.IsHtml(txt) {
 		txt, _ = utils.GetHtmlText(txt)
 	}
