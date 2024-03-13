@@ -28,6 +28,7 @@ type BaseElement struct {
 	Tags          []tags.Tag `json:"tags,omitempty"`          // 标签
 	NamespaceName string     `json:"namespaceName,omitempty"` // 命名空间
 	Package       string     `json:"package,omitempty"`       // 包名
+	DataType      string     `json:"dataType,omitempty"`      // 数据类型
 }
 
 type NameElement struct {
@@ -36,13 +37,17 @@ type NameElement struct {
 	Alias string `json:"alias,omitempty"` // 别名
 }
 
-func (n *BaseElement) InitBase(line string, typeName string, namespaceName string, comments []*Comment) (err error) {
+func (n *NameElement) GetDataType() string {
+	return n.DataType
+}
+
+func (n *BaseElement) InitBase(parentElement tags.Element, line string, typeName string, namespaceName string, comments []*Comment) (err error) {
 	list := strings.Split(namespaceName, ".")
 	n.Package = list[len(list)-1]
 	n.Line = line
 	n.TypeName = typeName
 	n.NamespaceName = namespaceName
-	n.Tags, err = tags.ParseNotes(commentsToStrList(comments))
+	n.Tags, err = tags.ParseComments(parentElement, commentsToStrList(comments))
 	n.Comments = initComments(comments)
 	return
 }
@@ -133,8 +138,12 @@ func (n *BaseElement) SetTags(val []tags.Tag) {
 	n.Tags = val
 }
 
-func (n *BaseElement) NotesText() string {
+func (n *BaseElement) CommentsText() string {
 	return GetNotesText(n.Comments)
+}
+
+func (n *BaseElement) AddComment(commentText string) {
+	n.Comments = append(n.Comments, &Comment{Text: commentText})
 }
 
 func (n *BaseElement) Register(ctx context.Context, node Element) {
@@ -183,7 +192,7 @@ func (n *NameElement) InitName(name string, alias string) {
 }
 
 func (n *NameElement) Init(line string, typeName string, namespace string, notes []*Comment, elementName string, elementAlias string) {
-	n.BaseElement.InitBase(line, typeName, namespace, notes)
+	n.BaseElement.InitBase(n, line, typeName, namespace, notes)
 	n.BaseElement.InitDataTag(elementName)
 	n.InitName(elementName, elementAlias)
 }

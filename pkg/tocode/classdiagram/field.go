@@ -7,20 +7,19 @@ import (
 )
 
 type Field struct {
-	BaseElement
+	NameElement
 	class    *Class
 	Access   Access `json:"access"`
-	Name     string `json:"name"`
 	DataType string `json:"dataType"`
 }
 
 func NewField(ctx context.Context, class *Class, line string, namespace string, notes []*Comment) *Field {
-	f := &Field{
+	field := &Field{
 		class: class,
 	}
-	f.InitBase(line, "field", namespace, notes)
-	f.init(line)
-	return f
+	field.InitBase(field, line, "field", namespace, notes)
+	field.init(line)
+	return field
 }
 
 func (f *Field) init(line string) {

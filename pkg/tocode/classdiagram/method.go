@@ -7,10 +7,9 @@ import (
 )
 
 type Method struct {
-	BaseElement
+	NameElement
 	class      *Class
 	Access     Access            `json:"access,omitempty"`
-	Name       string            `json:"name,omitempty"`
 	Args       []*MethodArgument `json:"args,omitempty"`
 	Results    []*MethodResult   `json:"results,omitempty"`
 	IsStatic   bool              `json:"isStatic"`
@@ -18,12 +17,12 @@ type Method struct {
 }
 
 func NewMethod(ctx context.Context, class *Class, line string, notes []*Comment) *Method {
-	m := &Method{
+	method := &Method{
 		class:  class,
 		Access: AccessPublic,
 	}
-	m.InitBase(line, "method", class.GetNamespaceName(), notes)
-	return m
+	method.InitBase(method, line, "method", class.GetNamespaceName(), notes)
+	return method
 }
 
 func (f *Method) Init(line string) *Method {

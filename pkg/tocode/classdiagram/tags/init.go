@@ -53,12 +53,15 @@ func init() {
 	parseTags[TagTypeApi] = func(note string) (Tag, error) {
 		return NewTagApi(note)
 	}
+	parseTags[TagTypeClass] = func(note string) (Tag, error) {
+		return NewTagClass(note)
+	}
 }
 
-func ParseNotes(notes []string) ([]Tag, error) {
+func ParseComments(element Element, comments []string) ([]Tag, error) {
 	var list []Tag
-	for _, text := range notes {
-		tags, ok, err := ParseTags(text)
+	for _, text := range comments {
+		tags, ok, err := ParseTags(element, text)
 		if err != nil {
 			return nil, err
 		}
@@ -69,7 +72,7 @@ func ParseNotes(notes []string) ([]Tag, error) {
 	return list, nil
 }
 
-func ParseTags(text string) ([]Tag, bool, error) {
+func ParseTags(element Element, text string) ([]Tag, bool, error) {
 	if !strings.Contains(text, "@") {
 		return nil, false, nil
 	}
@@ -79,6 +82,7 @@ func ParseTags(text string) ([]Tag, bool, error) {
 		if err != nil {
 			return nil, false, err
 		} else if ok {
+			tag.SetElement(element)
 			list = append(list, tag)
 		}
 	}

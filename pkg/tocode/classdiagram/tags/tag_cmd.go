@@ -4,6 +4,8 @@ import "github.com/jfeliu007/goplantuml/pkg/tocode/classdiagram/utils"
 
 type TagCmd struct {
 	BaseTag
+	Name   string `json:"name"`
+	Fields Fields `json:"fields"`
 }
 
 func NewTagCmd(text string) (*TagCmd, error) {

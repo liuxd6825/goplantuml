@@ -3,14 +3,14 @@ package classdiagram
 import "context"
 
 type Include struct {
-	BaseElement
+	NameElement
 	FileName string `json:"fileName"`
 }
 
 func NewInclude(line string, namespaceName string, notes []*Comment) *Include {
-	i := &Include{}
-	i.InitBase(line, "include", namespaceName, notes)
-	return i
+	include := &Include{}
+	include.InitBase(include, line, "include", namespaceName, notes)
+	return include
 }
 
 func (b *Include) Parse(ctx context.Context, reader ParseReader) (err error) {

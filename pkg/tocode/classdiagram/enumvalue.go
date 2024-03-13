@@ -3,16 +3,14 @@ package classdiagram
 import "context"
 
 type EnumValue struct {
-	BaseElement
-	Name string `json:"name"`
+	NameElement
 	Line string `json:"-"`
 }
 
 func NewEnumValue(ctx context.Context, line string, namespaceName string, notes []*Comment) *EnumValue {
-	member := &EnumValue{
-		Name: line,
-		Line: line,
-	}
-	member.InitBase(line, "EnumValue", namespaceName, notes)
+	member := &EnumValue{}
+	member.Name = line
+	member.Line = line
+	member.InitBase(member, line, "EnumValue", namespaceName, notes)
 	return member
 }

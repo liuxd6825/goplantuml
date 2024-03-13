@@ -1,116 +1,85 @@
-@startuml
+@startuml person
 
-title 我的一天
+skinparam nodesep 5
 
-' 模型分析
-namespace persons{
-    namespace model {
+' 模型分析 @framework(es)
+namespace person {
 
-        '人员 @aggerage()
-        class Person  {
-            '姓名 @data(size:100) @grid(width:200) @editor()
-            Name string
-            '出生日期
-            Birthday dateTime
-            '分析状态
-            Analyse string
-            '备注
-            Notes string
-            License *License
-            PeopleType
-            '保存 @command
-            Save(cmd SaveCommand) error
-            '按Id查询 @query()
-            FindById(ctx context.Context, id string) (Person, error)
-            '按Id查询 @query()
-            FindPaging(ctx context.Context, filter string) ([]*Person, error)
-            '按Id查询 @query()
-            FindList(ctx context.Context, filter string) (persons []*Person, isFound bool, err error)
-        }
+    top to bottom direction
 
-
-
-        Person .. N1
-
-
-        class Basic {
-            '分析状态
-            Title string
-            Name string
-            Value string
-            DataType string
-        }
-
-        '证件
-        class License {
-            '截止日期
-            LicenseType LicenseType
-            '卡号
-            Code string
-            '截止日期
-            ExpirationDate dateTime
-            '备注
-            Notes string
-        }
-
-        '证件类型
-        class LicenseType {
-            '身份证
-            IdCard
-            '驾驶证
-            Drive
-            '医保
-            Health
-            '社会卡
-            SocialSecurity
-        }
-
-
-        '性别
-        enum Gender {
-            '男
-            Man
-            '女
-            Woman
-            '@
-            M
-        }
-
-        '人员类型
-        enum  PeopleType {
-            '报案人
-            Informant
-            '嫌疑人
-            Suspect
-            '受害人
-            Victim
-            '第三人
-            Third
-        }
-
+    '人员
+    ' @aggregatea
+    class Person   {
+        CaseId string
+        '基本信息
+        Basic  Basic
+        '许可
+        License[] License
         '报案人金额
-        class InformantMoney  {
-        }
-
+        ReportMoney ReportMoney
         '嫌疑人金额
-        class SuspectMoney {
-        }
+        SuspectMoney SuspectMoney
+        '地址
+        Address[] Address
+    }
 
-        class AnalyseStatus {
-            待分析
-            分析中
-            排除
-            完成
-        }
+    '基本信息
+    class Basic {
+        Name string
+        Birthday dateTime
+        Analyse string
+        Notes string
+        '性别 @enum{Man:"男",Woman:"女",Unknown:"男"}
+        Gender Gender
+        '人员类型 @enum{Informant:报案人,Suspect:嫌疑人,Victim:第三人,Third:第三人}
+        PeopleType PeopleType
+        '分析类型 @enum{待分析,分析中,排除,完成}
+        AnalyseStatus AnalyseStatus
+    }
 
-        Person ”1“->"*" 银行账户 :> 拥有
-        Person ”1“->"*" License :> 拥有
-        Person -> InformantMoney :> 拥有
-        Person -> SuspectMoney :> 拥有
-        Person ”1“->"*" Basic :> 拥有
+    '地址 @
+    class Address {
+        ' 省
+        Province string
+        ' 市
+        City string
+        ' 区
+        District string
+        ' 详细
+        Detail string
+    }
+
+    '证件 @entity
+    class Certificate {
+        '截止日期 @enum{IdCard:身份证,Drive:驾驶证,Health:医保,SocialSecurity:社保卡}
+        Type CertificateType
+        '卡号
+        Code string
+        '截止日期
+        ExpirationDate dateTime
+        '备注
+        Notes string
+    }
+
+    enum CertificateType {
 
     }
 
+    '嫌疑人金额 @entity
+    class SuspectMoney {
+
+    }
+    ' 账户
+    class Account {
+        Code string
+        Bank string
+    }
+    Person ”1“-up-"1" Basic :> 拥有
+    Person ”1“-up-"1" Address :> 拥有
+    Person ”1“-left-"*" Account :> 拥有
+    Person ”1“-right-"*" License :> 拥有
+    Person -down- ReportMoney :> 拥有
+    Person -down- SuspectMoney :> 拥有
 }
 
 

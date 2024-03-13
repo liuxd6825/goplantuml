@@ -2,6 +2,7 @@ package classdiagram
 
 import (
 	"context"
+	"github.com/jfeliu007/goplantuml/pkg/tocode/classdiagram/tags"
 	"github.com/jfeliu007/goplantuml/pkg/tocode/classdiagram/utils"
 	"strings"
 )
@@ -19,9 +20,24 @@ func NewEnum(ctx context.Context, line string, namespace string, notes []*Commen
 	if namespace != "" && ns != "" {
 		ns = "." + ns
 	}
-	enum.InitBase(line, "enum", namespace+ns, notes)
+	enum.InitBase(enum, line, "enum", namespace+ns, notes)
 	enum.InitName(name, alias)
 	enum.InitDataTag(name)
+	return enum
+}
+
+func NewEnumWithTag(ctx context.Context, name string, namespace *Namespace, tag *tags.TagEnum) *Enum {
+	enum := &Enum{
+		Members: make([]*EnumValue, 0),
+	}
+	enum.InitBase(enum, "", "enum", namespace.NamespaceName, nil)
+	enum.InitName(name, "")
+	enum.NamespaceName = namespace.NamespaceName
+	for _, item := range tag.Items {
+		enumValue := NewEnumValue(ctx, item.Name, namespace.NamespaceName, nil)
+		enum.AddComment(item.Title)
+		enum.AddEnumValue(enumValue)
+	}
 	return enum
 }
 

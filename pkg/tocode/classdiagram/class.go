@@ -25,7 +25,7 @@ func NewClass(ctx context.Context, line string, namespace string, notes []*Comme
 		ns = ns + "." + parseRes.NamespaceName
 	}
 	class.InitName(parseRes.Name, parseRes.Alias)
-	class.InitBase(line, "class", ns, notes)
+	class.InitBase(class, line, "class", ns, notes)
 	class.InitDataTag(parseRes.Name)
 	class.GenericType = parseRes.GenericType
 	return class
@@ -42,7 +42,7 @@ func NewInterface(ctx context.Context, line string, namespace string, notes []*C
 		ns = ns + "." + parseRes.NamespaceName
 	}
 	class.InitName(parseRes.Name, parseRes.Alias)
-	class.InitBase(line, "interface", ns, notes)
+	class.InitBase(class, line, "interface", ns, notes)
 	class.GenericType = parseRes.GenericType
 	class.IsInterface = true
 	return class

@@ -80,8 +80,9 @@ func (b *UMLBlock) parse(ctx context.Context, reader ParseReader, startTag strin
 			}
 		}
 		if strings.HasPrefix(line, endTag) {
-			return nil
+			break
 		}
 	}
-	return nil
+	err = b.Root.CreateEnumsForTag(ctx)
+	return err
 }

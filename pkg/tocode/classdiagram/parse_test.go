@@ -8,7 +8,7 @@ import (
 )
 
 func TestParseFile(t *testing.T) {
-	parseFile(t, "./test/example/tag.puml")
+	parseFile(t, "../../../test/example/tag.puml")
 }
 
 func TestParseFile_Note(t *testing.T) {
