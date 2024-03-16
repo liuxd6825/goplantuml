@@ -29,6 +29,7 @@ type BaseElement struct {
 	NamespaceName string     `json:"namespaceName,omitempty"` // 命名空间
 	Package       string     `json:"package,omitempty"`       // 包名
 	DataType      string     `json:"dataType,omitempty"`      // 数据类型
+
 }
 
 type NameElement struct {
@@ -151,6 +152,13 @@ func (n *BaseElement) Register(ctx context.Context, node Element) {
 	if pctx != nil {
 		pctx.AddNode(node)
 	}
+}
+
+func (n *BaseElement) DataTypeIsArray() bool {
+	if strings.HasPrefix(n.DataType, "[]") {
+		return true
+	}
+	return false
 }
 
 func (n *NameElement) GetName() string {

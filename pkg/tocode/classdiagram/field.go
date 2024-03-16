@@ -8,17 +8,17 @@ import (
 
 type Field struct {
 	NameElement
-	class    *Class
-	Access   Access `json:"access"`
-	DataType string `json:"dataType"`
+	class  *Class
+	Access Access `json:"access"`
 }
 
 func NewField(ctx context.Context, class *Class, line string, namespace string, notes []*Comment) *Field {
 	field := &Field{
 		class: class,
 	}
-	field.InitBase(field, line, "field", namespace, notes)
 	field.init(line)
+	field.InitBase(field, line, "field", namespace, notes)
+
 	return field
 }
 

@@ -219,7 +219,7 @@ func (n *Namespace) FindEnumTag() []*tags.TagEnum {
 func (n *Namespace) CreateEnumsForTag(ctx context.Context) error {
 	list := n.FindEnumTag()
 	for _, enumTag := range list {
-		el := NewEnumWithTag(ctx, enumTag.ElementName, n, enumTag)
+		el := NewEnumWithTag(ctx, enumTag.GetElement().GetDataType(), n, enumTag)
 		n.addElement(ctx, el)
 	}
 	return nil

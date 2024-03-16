@@ -32,6 +32,7 @@ func NewEnumWithTag(ctx context.Context, name string, namespace *Namespace, tag 
 	}
 	enum.InitBase(enum, "", "enum", namespace.NamespaceName, nil)
 	enum.InitName(name, "")
+	enum.Name = tag.Element.GetDataType()
 	enum.NamespaceName = namespace.NamespaceName
 	for _, item := range tag.Items {
 		enumValue := NewEnumValue(ctx, item.Name, namespace.NamespaceName, nil)

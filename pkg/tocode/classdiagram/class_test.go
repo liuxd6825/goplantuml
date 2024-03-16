@@ -5,8 +5,6 @@ import (
 )
 
 func Test_ParseClassName(t *testing.T) {
-	res := ParseClassName("class pack.UserMapper <<User,Entity >> { ", "class")
-	t.Log(res.NamespaceName)
-	t.Log(res.Name)
-	t.Log(res.GenericType)
+	res := ParseClassName("class Edge <<Use, Name>> extends Base ,Edit implements IBase,IEdit{", "class")
+	t.Log(res)
 }

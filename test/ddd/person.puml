@@ -10,59 +10,57 @@ namespace person {
     '人员
     ' @aggregatea
     class Person   {
-        CaseId string
+        caseId string
         '基本信息
-        Basic  Basic
+        basic  Basic
         '许可
-        License[] License
+        license []License
         '报案人金额
-        ReportMoney ReportMoney
+        reportMoney ReportMoney
         '嫌疑人金额
-        SuspectMoney SuspectMoney
+        suspectMoney SuspectMoney
         '地址
-        Address[] Address
+        address []Address
+        '备忘录
+        memos []Memo
     }
 
     '基本信息
     class Basic {
-        Name string
-        Birthday dateTime
-        Analyse string
-        Notes string
+        name string
+        birthday DateTime
+        analyse string
+        notes string
         '性别 @enum{Man:"男",Woman:"女",Unknown:"男"}
-        Gender Gender
+        gender Gender
         '人员类型 @enum{Informant:报案人,Suspect:嫌疑人,Victim:第三人,Third:第三人}
-        PeopleType PeopleType
+        peopleType PeopleType
         '分析类型 @enum{待分析,分析中,排除,完成}
-        AnalyseStatus AnalyseStatus
+        analyseStatus AnalyseStatus
     }
 
     '地址 @
     class Address {
         ' 省
-        Province string
+        province string
         ' 市
-        City string
+        city string
         ' 区
-        District string
+        district string
         ' 详细
-        Detail string
+        detail string
     }
 
     '证件 @entity
-    class Certificate {
+    class Cert {
         '截止日期 @enum{IdCard:身份证,Drive:驾驶证,Health:医保,SocialSecurity:社保卡}
-        Type CertificateType
+        type CertType
         '卡号
-        Code string
+        code string
         '截止日期
-        ExpirationDate dateTime
+        expDate dateTime
         '备注
-        Notes string
-    }
-
-    enum CertificateType {
-
+        notes string
     }
 
     '嫌疑人金额 @entity
@@ -71,11 +69,19 @@ namespace person {
     }
     ' 账户
     class Account {
-        Code string
-        Bank string
+        code string
+        bank string
     }
+
+
+    class Memo {
+        userId string
+        time dateTime
+    }
+
+    Person ”1“-up-"*" Cert :> 拥有
     Person ”1“-up-"1" Basic :> 拥有
-    Person ”1“-up-"1" Address :> 拥有
+    Person ”1“-up-"*" Address :> 拥有
     Person ”1“-left-"*" Account :> 拥有
     Person ”1“-right-"*" License :> 拥有
     Person -down- ReportMoney :> 拥有

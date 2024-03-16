@@ -56,6 +56,12 @@ func init() {
 	parseTags[TagTypeClass] = func(note string) (Tag, error) {
 		return NewTagClass(note)
 	}
+	parseTags[TagTypeDict] = func(note string) (Tag, error) {
+		return NewTagDict(note)
+	}
+	parseTags[TagTypeDomain] = func(note string) (Tag, error) {
+		return NewTagDomain(note)
+	}
 }
 
 func ParseComments(element Element, comments []string) ([]Tag, error) {

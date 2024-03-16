@@ -7,6 +7,8 @@ import (
 type TagData struct {
 	BaseTag
 	Size   int    `json:"size,omitempty"`
+	MinLen int    `json:"minLen,omitempty"`
+	MaxLen int    `json:"maxLen,omitempty"`
 	Titles Titles `json:"titles,omitempty"`
 }
 

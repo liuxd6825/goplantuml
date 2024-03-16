@@ -102,8 +102,12 @@ type ResultParseClassName struct {
 	Name          string   `json:"name"`
 	Alias         string   `json:"alias"`
 	GenericType   []string `json:"genericType"`
+	Extends       []string `json:"extends"`
+	Implements    []string `json:"implements"`
 	NamespaceName string   `json:"namespaceName"`
 }
+
+const extends = "extends"
 
 func ParseClassName(line string, tagName string) *ResultParseClassName {
 	name, alias, namespaceName, list := utils.ParseName(line, tagName)
@@ -112,9 +116,38 @@ func ParseClassName(line string, tagName string) *ResultParseClassName {
 		Alias:         alias,
 		NamespaceName: namespaceName,
 	}
+	if strings.Contains(line, "extends") {
+		idx := strings.Index(line, "extends")
+		s := line[idx+7:]
+		s = strings.ReplaceAll(s, ",", " ")
+		list := strings.Split(s, " ")
+		for _, item := range list {
+			item = strings.ReplaceAll(item, "{", "")
+			if item == "implements" {
+				break
+			}
+			if item != "" {
+				res.Extends = append(res.Extends, item)
+			}
+		}
+	}
+	if strings.Contains(line, "implements") {
+		idx := strings.Index(line, "implements")
+		s := line[idx+10:]
+		s = strings.ReplaceAll(s, ",", " ")
+		list := strings.Split(s, " ")
+		for _, item := range list {
+			item = strings.ReplaceAll(item, "{", "")
+			if item == "extends" {
+				break
+			}
+			if item != "" {
+				res.Implements = append(res.Implements, item)
+			}
+		}
+	}
 
-	isAdd := false
-
+	isGenericType := false
 	for _, item := range list {
 		// 解析 <<User>>
 		if strings.HasPrefix(item, "<<") && strings.HasSuffix(item, ">>") {
@@ -122,15 +155,14 @@ func ParseClassName(line string, tagName string) *ResultParseClassName {
 			res.GenericType = strings.Split(str, " ")
 			break
 		}
-
 		// 解析 << User >>
 		if strings.HasPrefix(item, "<<") {
-			isAdd = true
+			isGenericType = true
 			res.AddGenericType(item[2:])
 		} else if strings.HasSuffix(item, ">>") {
-			isAdd = false
+			isGenericType = false
 			res.AddGenericType(item[:len(item)-2])
-		} else if isAdd {
+		} else if isGenericType {
 			res.GenericType = append(res.GenericType, item)
 		}
 	}

@@ -15,6 +15,7 @@ type BaseTag struct {
 }
 
 const (
+	TagTypeDomain     TagType = "@domain"
 	TagTypeData       TagType = "@data"
 	TagTypeAggregate  TagType = "@aggregate"
 	TagTypeEnum       TagType = "@enum"
@@ -30,6 +31,7 @@ const (
 	TagTypeCmd        TagType = "@cmd"
 	TagTypeClass      TagType = "@class"
 	TagTypeFramework  TagType = "@framework"
+	TagTypeDict       TagType = "@dict"
 )
 
 func (t *BaseTag) GetTagType() TagType {

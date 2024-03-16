@@ -1,14 +1,10 @@
 
 @startuml
 '人员信息
-'@data()
 class Person {
     '@enum(A,B,C)
     Type PersonType
 }
 
-note left of Person
-   人员信息
-end note
 
 @enduml
