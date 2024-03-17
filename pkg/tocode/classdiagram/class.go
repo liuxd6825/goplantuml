@@ -108,6 +108,7 @@ type ResultParseClassName struct {
 }
 
 const extends = "extends"
+const implements = "implements"
 
 func ParseClassName(line string, tagName string) *ResultParseClassName {
 	name, alias, namespaceName, list := utils.ParseName(line, tagName)
@@ -116,62 +117,84 @@ func ParseClassName(line string, tagName string) *ResultParseClassName {
 		Alias:         alias,
 		NamespaceName: namespaceName,
 	}
-	if strings.Contains(line, "extends") {
-		idx := strings.Index(line, "extends")
+	res.setExtends(line)
+	res.setImplements(line)
+	res.setGenericType(list)
+	return res
+}
+
+func (r *ResultParseClassName) setExtends(line string) {
+	if strings.Contains(line, extends) {
+		idx := strings.Index(line, extends)
 		s := line[idx+7:]
 		s = strings.ReplaceAll(s, ",", " ")
 		list := strings.Split(s, " ")
 		for _, item := range list {
 			item = strings.ReplaceAll(item, "{", "")
-			if item == "implements" {
+			if item == implements {
 				break
 			}
 			if item != "" {
-				res.Extends = append(res.Extends, item)
+				r.Extends = append(r.Extends, item)
 			}
 		}
 	}
-	if strings.Contains(line, "implements") {
-		idx := strings.Index(line, "implements")
+}
+
+func (r *ResultParseClassName) setImplements(line string) {
+	if strings.Contains(line, implements) {
+		idx := strings.Index(line, implements)
 		s := line[idx+10:]
 		s = strings.ReplaceAll(s, ",", " ")
 		list := strings.Split(s, " ")
 		for _, item := range list {
 			item = strings.ReplaceAll(item, "{", "")
-			if item == "extends" {
+			if item == extends {
 				break
 			}
 			if item != "" {
-				res.Implements = append(res.Implements, item)
+				r.Implements = append(r.Implements, item)
 			}
 		}
 	}
+}
 
+func (r *ResultParseClassName) setGenericType(list []string) {
 	isGenericType := false
 	for _, item := range list {
 		// 解析 <<User>>
 		if strings.HasPrefix(item, "<<") && strings.HasSuffix(item, ">>") {
 			str := strings.Trim(item[2:len(item)-2], " ")
-			res.GenericType = strings.Split(str, " ")
+			str = strings.ReplaceAll(item, ",", " ")
+			r.GenericType = strings.Split(str, " ")
 			break
 		}
 		// 解析 << User >>
 		if strings.HasPrefix(item, "<<") {
 			isGenericType = true
-			res.AddGenericType(item[2:])
+			s := strings.ReplaceAll(item[2:], ",", "")
+			if len(s) > 0 {
+				r.AddGenericType(s)
+			}
 		} else if strings.HasSuffix(item, ">>") {
 			isGenericType = false
-			res.AddGenericType(item[:len(item)-2])
+			s := strings.ReplaceAll(item[:len(item)-2], ",", "")
+			if len(s) > 0 {
+				r.AddGenericType(s)
+			}
+			break
 		} else if isGenericType {
-			res.GenericType = append(res.GenericType, item)
+			s := strings.ReplaceAll(item, ",", "")
+			if len(s) > 0 {
+				r.AddGenericType(s)
+			}
 		}
 	}
-	return res
 }
 
-func (c *ResultParseClassName) AddGenericType(typeName string) {
+func (r *ResultParseClassName) AddGenericType(typeName string) {
 	s := strings.Trim(typeName, " ")
-	if s != "" && s != "," && s != ";" && s != "extends" {
-		c.GenericType = append(c.GenericType, s)
+	if s != "" && s != "," && s != ";" && s != extends && s != implements {
+		r.GenericType = append(r.GenericType, s)
 	}
 }
